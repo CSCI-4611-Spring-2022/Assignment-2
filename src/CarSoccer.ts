@@ -69,7 +69,7 @@ export class CarSoccer extends GraphicsApp
     update(deltaTime : number) : void
     {
         // Speed in meters/sec
-        const carSpeed = 10;
+        const carSpeed = 30;
 
         // Move the car based on the user input vector
         this.car.velocity.set(carSpeed*deltaTime*this.inputVector.x, 0, carSpeed*deltaTime*-this.inputVector.y);
@@ -98,9 +98,13 @@ export class CarSoccer extends GraphicsApp
 
     onKeyUp(event: KeyboardEvent): void 
     {
-        if(event.key == 'w' || event.key == 'ArrowUp' || event.key == 's' || event.key == 'ArrowDown')
+        if((event.key == 'w' || event.key == 'ArrowUp') && this.inputVector.y == 1)
             this.inputVector.y = 0;
-        else if(event.key == 'a' || event.key == 'ArrowLeft' || event.key == 'd' || event.key == 'ArrowRight')
+        else if((event.key == 's' || event.key == 'ArrowDown') && this.inputVector.y == -1)
+            this.inputVector.y = 0;
+        else if((event.key == 'a' || event.key == 'ArrowLeft')  && this.inputVector.x == -1)
+            this.inputVector.x = 0;
+        else if((event.key == 'd' || event.key == 'ArrowRight')  && this.inputVector.x == 1)
             this.inputVector.x = 0;
     }
 }

@@ -29,6 +29,7 @@ export class Car extends THREE.Object3D
 
     public update() : void
     {
-        this.position.add(this.velocity);
+        this.translateX(this.velocity.x);
+        this.translateZ(this.velocity.z);
     }
 }
