@@ -9,7 +9,7 @@ export class CarSoccer extends GraphicsApp
     // null even though they aren't initialized in the constructor
     private car! : Car;
     private ball! : Ball;
-
+    
     private inputVector : THREE.Vector2;
 
     constructor()
@@ -22,8 +22,8 @@ export class CarSoccer extends GraphicsApp
     createScene() : void
     {
         // Setup camera
-        this.camera.position.set(0, 60, 70);
-        this.camera.lookAt(0, 0, 10);
+        this.camera.position.set(0, 63, 73);
+        this.camera.lookAt(0, 0, 0);
         this.camera.up.set(0, 1, 0);
 
         // Create an ambient light
@@ -57,36 +57,40 @@ export class CarSoccer extends GraphicsApp
         this.scene.add(pitch);
 
         // Create the car
-        this.car = new Car(new THREE.Vector3(0, 1, 45), new THREE.Vector3(3, 2, 4), 2.5);
+        this.car = new Car(new THREE.Vector3(0, 1, 45), new THREE.Vector3(4, 4, 5), 4);
         this.scene.add(this.car);
 
         // Create the ball
         this.ball = new Ball(new THREE.Vector3(0, 2.6, 0), 2.6);
         this.scene.add(this.ball);
-        
     }
 
     update(deltaTime : number) : void
     {
         // Speed in meters/sec
-        const carSpeed = 30;
+        const carMaxSpeed = 30;
 
         // Move the car based on the user input vector
-        this.car.velocity.set(carSpeed*deltaTime*this.inputVector.x, 0, carSpeed*deltaTime*-this.inputVector.y);
-        this.car.update();
+        this.car.velocity.set(carMaxSpeed*this.inputVector.x, 0, carMaxSpeed*-this.inputVector.y);
+        this.car.update(deltaTime);
 
         // Update the ball physics
-        this.ball.update();
+        this.ball.update(deltaTime);
+
+        // Update the ball shadow
+        this.ball.updateShadow();
     }
 
+    // Event handler for keyboard input
+    // You don't need to modify this function
     onKeyDown(event: KeyboardEvent): void 
     {
         if(event.key == 'w' || event.key == 'ArrowUp')
             this.inputVector.y = 1;
-        else if(event.key == 'a' || event.key == 'ArrowLeft')
-            this.inputVector.x = -1;
         else if(event.key == 's' || event.key == 'ArrowDown')
             this.inputVector.y = -1;
+        else if(event.key == 'a' || event.key == 'ArrowLeft')
+            this.inputVector.x = -1;
         else if(event.key == 'd' || event.key == 'ArrowRight')
             this.inputVector.x = 1;
         else if(event.key == ' ')
@@ -96,6 +100,8 @@ export class CarSoccer extends GraphicsApp
         }
     }
 
+    // Event handler for keyboard input
+    // You don't need to modify this function
     onKeyUp(event: KeyboardEvent): void 
     {
         if((event.key == 'w' || event.key == 'ArrowUp') && this.inputVector.y == 1)
