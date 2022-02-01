@@ -114,9 +114,9 @@ Graded out of 20 points.
 
     **Car-Ball Collisions**
 
-11. Detect contact between the ball and the car using the sphere-sphere collision approach described in more detail in the section below.(2)
+11. Detect contact between the ball and the car using the sphere-sphere collision approach described in more detail below.(2)
 
-12. Compute the new velocity of the ball after the collision with the car according to the formula described in more detail in the section below. (2)
+12. Compute the new velocity of the ball after the collision with the car according to the formula described in more detail below. (2)
 
 ## Wizard Bonus Challenge
 
@@ -127,6 +127,57 @@ There are some great opportunities for extra work in this assignment. Turn this 
 A single point may not sound like a lot, but keep in mind that on a 20-point scale, this is equivalent to a 5% bonus! Make sure to document your wizard functionality in the Submission Information portion of this readme file, so that the TAs know what to look for when they grade your program.
 
 The wizard bonus challenge also offers you a chance to show off your skills and creativity!  While grading the assignments the TAs will identify the best four or five examples of people doing cool stuff with computer graphics. We call these students our **wizards**, and after each assignment, the students selected as wizards will have their programs demonstrated to the class.
+
+## Useful Technical Info
+
+#### Simulating Collisions
+
+One of the main challenges in this assignment is handling collisions between the ball and the car. For collision purposes, we will approximate the car by a sphere, as shown in the figure below, so we only need to detect whether the two spheres representing the car and the ball are intersecting. Of course, this may result in us detecting collisions when the car's rendered geometry does not actually hit the ball, or vice versa, but as long as the size of proxy and the car model are not too different it shouldn't matter too much to the gameplay.
+
+![](./images/collision1.png)
+
+In any collision handling routine, there are two main steps: first, detecting whether a collision has occurred, and second, resolving the collision by updating the positions and velocities of the colliding objects. With spheres, collision detection is easy: two spheres have collided if the distance between their centers is less than or equal to the sum of their radii. Notice that the figure illustrates the case where the two spheres overlap each other. In other words, one has passed inside the other. In real life, if you have two solid spheres, this case would never occur. The spheres would bounce off each other before penetrating each other. However, this happens quite regularly in computer graphics simulation. If you update your simulation once each frame, that means the elapsed time (i.e., Delta T or *dt)* between consecutive frames will be somewhere around 1/30–1/60 second. That's fast, but still not fast enough to capture the *exact* moment when the ball first makes contact with the car. This means that if you update the position of the ball using p*'* = p + v *dt*, you may have a situation where p' ends up being inside the car's proxy sphere or inside a wall of the playing field. When you detect this has occurred, you should calculate a corrected position for the ball that places it just outside of the obstacle, as shown in the diagram below:
+
+![](./images/collision2.jpg)
+
+When a ball bounces off the ground or a wall or even a sphere its velocity changes, but how? It depends on the normal of the surface at the point the ball comes into contact. Here is an illustration for a ball bouncing off an inclined plane.
+
+![](./images/collision3.png)
+
+The ball approaches with a velocity vector v. When the ball bounces, its velocity is reflected about the normal of the plane n, and its new, reflected velocity is r.  The equation for r is shown above. This is actually a general formula for reflecting any vector about another vector. This gets used in computer graphics lighting equations as well. Notice that it involves a dot product!
+
+So, if this is how a ball bounces off an inclined plane, what about a sphere? Actually, we can use the exact same equation. We just need the normal at the exact point where the spheres touch. For a collision between two spheres, this normal is simply parallel to the line joining their centers. 
+
+One final tip is that the discussion above assumes the ball is bouncing off a stationary object. If the object itself is moving, like our car, then all of the math is the same, but rather than using the ball's velocity in the global reference frame of the soccer pitch, we use the ball's velocity relative to the car.
+
+In summary, your ball-car collision routine should follow these steps, each of which involves the kind of 3D graphics math, working with points and vectors, that we have been learning about in class.
+
+- Detect that the two spheres have collided (and probably penetrated each other).
+- "Correct" the collision by adjusting the ball's position so that it is no longer inside the car sphere.
+- Compute the relative velocity of the ball, vrel = vball – vcar.
+- Reflect the relative velocity about the collision normal
+- Set the new velocity of the ball, vball = vcar + vrel.
+
+#### Simulating Extreme Cases
+
+You will not be graded on how you handle multiple simultaneous collisions, such as when the ball gets squeezed between the car and the wall; this can be a challenge to handle even in real games. We will only grade you on whether you correctly handle cases where the ball collides with one thing at a time. In any case, we have set the default sizes of the ball and car so that the center of the car is lower in *y* than the radius of the ball, which means the ball will always be able to escape upwards to get out of the "pinch" caused by multiple simultaneous collisions.
+
+In another extreme case, the ball can sometimes appear to get "stuck" to the car. This is usually an indicator of some numerical instability in your algorithm. For example, if the ball is "inside" the car sphere at frame 1 is should bounce away and no longer be in contact with the car at frame 2. However, if you do not correct the ball's position to bring it outside of the car, or if the ball's velocity is very small, or there is some other issue and the ball does not move far enough away from the car to escape it, then you may detect another collision at frame 2. Since you reflect the velocity at each collision, this can create a situation where the ball bounces back and forth forever, never escaping the car sphere. If you encounter this, there are several ways to fix it. The key is simply to make sure the ball is outside of the car's sphere and moving away from the car at the end of your collision routine.
+
+#### Car Driving Model
+
+A variety of strategies can be used to control the car. We are going for something that is a good balance between realism and playability. We suggest the following.
+
+For controls:
+
+- Think of holding the Up Arrow key as putting your foot on the gas pedal with the car in Drive -- the car should speed up until it reaches some max speed.
+- Think of holding the Down Arrow key as putting you foot on the gas pedal with the car in Reverse -- again the car should speed up until it reaches some max speed, but since this will be in reverse, you might want to think of it as -maxSpeed.
+- When Up or Down are not pressed, you are not giving the car any gas, so it should slow down until it stops.
+- When you hold the Left Arrow or Right Arrow key this is like turning the steering wheel all the way to the left or right. The car should then turn, assuming its speed is not zero. You cannot turn a car that is not moving forward or backward.
+
+The starter code includes a `Car` and a `Ball` class. You don't have to use these, but these are the exact versions we use in our implementation, so you might like to use them. Look at the data stored in each of these classes. Both of these classes inherent from the Three.js `Object3D` class, which provides all the standard variables one would expect for a 3D object.  Additionally, both classes store the velocity as a `Vector3` object that can be manipulated in your code to change their behavior.
+
+You will probably want to add a sensitivity parameter to the controls. For example, in our implementation, we include variable settings for the accelerationRate and turningRate. These determine how responsive you car is. For example, if your car's accelerationRate is 20m/s, you can multiply this by *dt* to determine how much the car should accelerate this frame and modify the car's speed based on this. For the turningRate, you can do something similar, like define a turningRate of 360 degrees/s, then multiply by *dt* to see how many degrees the car should turn. However, remember the turningRate should also be tied to the speed.
 
 ## Submission
 
