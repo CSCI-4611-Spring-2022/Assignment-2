@@ -50,9 +50,9 @@ The playing field, or pitch, is rendered out of 3D boxes and line segments with 
 
 Most computer games modeled after real sports are designed to balance the tradeoff between physical realism and game play. A completely realistic simulation of, say, soccer would be quite complex and would make it really difficult to play the game on a 2D computer screen, especially with the limited amount of control possible using a keyboard/mouse or controller input. In our case, the playing field is the size of a real soccer pitch, and the car is about the size of an actual car, but the ball is absurdly large to make it easy to hit. 
 
-You can try a [finished version of the game](https://csci-4611-spring-2022.github.io/Builds/Assignment-2/) in the Builds repository on the course GitHub. This is only a representative example, and you do not need to make your game look or play exactly the same. Your program can have a different look and feel, so long as it satisfies the requirements specified in the rubric.
-
 ## Programming Requirements
+
+You can try a [finished version of the game](https://csci-4611-spring-2022.github.io/Builds/Assignment-2/) in the Builds repository on the course GitHub. This is only a representative example, and you do not need to make your game look or play exactly the same. Your program can have a different look and feel, so long as it satisfies the requirements specified in the rubric.
 
 The starter code will render the pitch, the soccer ball, and the car, and it includes an unrealistic method for moving the car around the pitch. Your assignment is to do the following:
 
@@ -63,6 +63,14 @@ The starter code will render the pitch, the soccer ball, and the car, and it inc
 5. Make the ball bounce off the ground and the imaginary "walls" and "ceiling" that bound the pitch.
 6. Program support for hitting the ball with the car whenever they come into contact.
 7. Detect when the ball hits the goals on either side of the pitch.
+
+#### Drawing the Soccer Field
+
+The coordinate system and dimensions of the pitch (in meters) are shown below. The support code is already set up to work in units of meters, matching the diagram above. The ball itself has a radius of 2.6 meters. You'll notice this picture also includes thin grid lines that mark the goals and the bounding box for the playing area. These are the lines you should draw to complete the 3D graphics model of the pitch.
+
+![Field Dimensions](./images/dimensions.png)
+
+#### Simulating the Physics
 
 To make the game easier to implement, we will make a few simplifying assumptions about the physics. Specifically, you should follow these guidelines in your code.
 
@@ -78,17 +86,37 @@ To make the game easier to implement, we will make a few simplifying assumptions
 
 Graded out of 20 points.
 
-1. Draw lines around the boundary of the 3D soccer pitch so that we can see the box that we will be playing inside.
-2. Draw a grid of lines for each goal.
-3. Make the ball move through the air based on a random initial velocity, and relaunch the ball when the space bar is pressed.
-4. Update the ball's position and velocity each time step based on the acceleration due to gravity.
-5. Detect contacts between the ball and the ground, and make the ball bounce in the correct direction. That is, the ball's velocity vector should be reflected about the normal of the ground.
-6. Detect when the ball hits the walls and the ceiling and make it bounce off them too.
-7. Use a similar approach to prevent the car from leaving the bounds of the playing area.
-8. Decrease the speed of the ball when it bounces. This is due to friction and other factors, but you do not need to simulate these; just decrease the speed by some constant. We used 80% in our implementation.
-9. Respond to a contact between the ball and the car using the sphere-sphere collision approach described in more detail at the end of this document.
-10. Give the car a more realistic driving model. The car should always move forwards or backwards relative to the direction it's facing, but never sideways. The up and down arrow keys should change its speed, while left and right should turn it at a rate proportional to its speed. One approach for doing this is described at the end of the technical discussion.
-11. When the ball hits one of the goals, reset the car to the initial position and relaunch the ball from the center of the pitch. You don't have to animate the ball actually going *into* the goal, just detect when the ball enters these special rectangular regions.
+​		**3D Drawing**
+
+1. Draw lines around the boundary of the 3D soccer pitch so that we can see the box that we will be playing inside.  You can use `Line` class in Three.js for this. Note that in newer versions of OpenGL, the line thickness is always drawn as 1 pixel wide. (2)
+
+2. Draw a grid of lines for each goal.  In the example program, the `BoxGeometry` class was used to create `Mesh` objects that appear as thicker lines.  However, you may also use the `Line` class if you want. (2)
+
+   **Ball Physics**
+
+3. Make the ball move through the air based on a random initial velocity, and relaunch the ball when the space bar is pressed. (1)
+
+4. Update the ball's position and velocity each time step based on the acceleration due to gravity. (2)
+
+5. Detect contacts between the ball and the ground, and make the ball bounce in the correct direction. That is, the ball's velocity vector should be reflected about the normal of the ground. (1)
+
+6. Detect when the ball hits the walls and the ceiling and make it bounce off them too. (1)
+
+7. Decrease the speed of the ball when it bounces. This is due to friction and other factors, but you do not need to simulate these; just decrease the speed by some constant. We used 80% in our implementation. (1)
+
+8. When the ball hits one of the goals, reset the car to the initial position and relaunch the ball from the center of the pitch. You don't have to animate the ball actually going *into* the goal, just detect when the ball enters these special rectangular regions. (2)
+
+   **Car Driving**
+
+9. Give the car a more realistic driving model. The car should always move forwards or backwards relative to the direction it's facing, but never sideways. The up and down arrow keys should change its speed, while left and right should turn it at a rate proportional to its speed. One approach for doing this is described at the end of the technical discussion. (2)
+
+10. Prevent the car from leaving the bounds of the playing area. (2)
+
+    **Car-Ball Collisions**
+
+11. Detect contact between the ball and the car using the sphere-sphere collision approach described in more detail in the section below.(2)
+
+12. Compute the new velocity of the ball after the collision with the car according to the formula described in more detail in the section below. (2)
 
 ## Wizard Bonus Challenge
 
