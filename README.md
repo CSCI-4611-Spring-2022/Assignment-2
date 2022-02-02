@@ -86,7 +86,7 @@ To make the game easier to implement, we will make a few simplifying assumptions
 
 Graded out of 20 points.
 
-​		**3D Drawing**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**3D Drawing**
 
 1. Draw lines around the boundary of the 3D soccer pitch so that we can see the box that we will be playing inside.  You can use `Line` class in Three.js for this. Note that in newer versions of OpenGL, the line thickness is always drawn as 1 pixel wide. (2)
 
