@@ -118,7 +118,11 @@ Graded out of 20 points.
 
 12. Compute the new velocity of the ball after the collision with the car according to the formula described in more detail below. ~~(2)~~ (3)
 
-    *Note: Three.js may have built-in functions for detecting intersections between different shapes.  You are **not** permitted to use them to complete Parts 11 and 12.  You should implement the specific algorithms presented in class and described below.*
+#### Prohibited Functions
+
+**Collision Detection:** Three.js may have built-in functions for detecting intersections between different shapes.  You are **not** permitted to use them to complete Parts 11 and 12.  You should implement the specific algorithms presented in class and described below.
+
+**setInterval:** The `setInterval()` function is useful for triggering occasional events based on a timer.  It should **not** be used for animations in computer graphics.  You should put all the logic for continuously moving objects in the `update()` method.
 
 ## Wizard Bonus Challenge
 
