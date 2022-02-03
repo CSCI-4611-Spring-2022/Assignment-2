@@ -90,11 +90,11 @@ Graded out of 20 points.
 
 1. Draw lines around the boundary of the 3D soccer pitch so that we can see the box that we will be playing inside.  You can use `Line` class in Three.js for this. Note that in newer versions of OpenGL, the line thickness is always drawn as 1 pixel wide. (2)
 
-2. Draw a grid of lines for each goal.  In the example program, the `BoxGeometry` class was used to create `Mesh` objects that appear as thicker lines.  However, you may also use the `Line` class if you want. (2)
+2. Draw a grid of lines for each goal.  In the example program, the `BoxGeometry` class was used to create `Mesh` objects that appear as thicker lines.  However, you may alternatively use the `Line` or `LineLoop` classes instead. (2)
 
    **Ball Physics**
 
-3. Make the ball move through the air based on a random initial velocity, and relaunch the ball when the space bar is pressed. (1)
+3. ~~Make the ball move through the air based on a random initial velocity, and relaunch the ball when the space bar is pressed. (1)~~
 
 4. Update the ball's position and velocity each time step based on the acceleration due to gravity. (2)
 
@@ -108,15 +108,17 @@ Graded out of 20 points.
 
    **Car Driving**
 
-9. Give the car a more realistic driving model. The car should always move forwards or backwards relative to the direction it's facing, but never sideways. The up and down arrow keys should change its speed, while left and right should turn it at a rate proportional to its speed. One approach for doing this is described at the end of the technical discussion. (2)
+9. Give the car a more realistic driving model. The car should always move forwards or backwards relative to the direction it's facing, but never sideways. The up and down arrow keys should change its speed, while left and right should turn it at a rate proportional to its speed. One approach for doing this is described below at the end of the technical discussion. (2)
 
 10. Prevent the car from leaving the bounds of the playing area. (2)
 
     **Car-Ball Collisions**
 
-11. Detect contact between the ball and the car using the sphere-sphere collision approach described in more detail below.(2)
+11. Detect contact between the ball and the car using the sphere-sphere collision approach described in more detail below. (2)
 
-12. Compute the new velocity of the ball after the collision with the car according to the formula described in more detail below. (2)
+12. Compute the new velocity of the ball after the collision with the car according to the formula described in more detail below. ~~(2)~~ (3)
+
+    *Note: Three.js may have built-in functions for detecting intersections between different shapes.  You are **not** permitted to use them to complete Parts 11 and 12.  You should implement the specific algorithms presented in class and described below.*
 
 ## Wizard Bonus Challenge
 
@@ -170,7 +172,7 @@ A variety of strategies can be used to control the car. We are going for somethi
 
 For controls:
 
-- Think of holding the Up Arrow key as putting your foot on the gas pedal with the car in Drive -- the car should speed up until it reaches some max speed.
+- Think of holding the Up Arrow key as putting your foot on the gas pedal with the car in Drive. The car should speed up until it reaches some max speed.
 - Think of holding the Down Arrow key as putting you foot on the gas pedal with the car in Reverse -- again the car should speed up until it reaches some max speed, but since this will be in reverse, you might want to think of it as -maxSpeed.
 - When Up or Down are not pressed, you are not giving the car any gas, so it should slow down until it stops.
 - When you hold the Left Arrow or Right Arrow key this is like turning the steering wheel all the way to the left or right. The car should then turn, assuming its speed is not zero. You cannot turn a car that is not moving forward or backward.
