@@ -9,32 +9,21 @@ export abstract class GraphicsApp
     protected zfar : number;
 
     // Renderer, scene, and camera objects
-    protected renderer! : THREE.WebGLRenderer;
-    protected scene! : THREE.Scene;
-    protected camera! : THREE.Camera;
+    protected renderer : THREE.WebGLRenderer;
+    protected scene : THREE.Scene;
+    protected camera : THREE.Camera;
 
     // Clock for computing fps
-    private clock! : THREE.Clock;
+    private clock : THREE.Clock;
 
-    constructor()
+    constructor(aspectRatio = 1.333)
     {
         // Set the default camera parameters
-        this.aspectRatio = 1;
+        this.aspectRatio = aspectRatio;
         this.fov = 60;
         this.znear = 1;
         this.zfar = 1000;
-    }
 
-    // Create the scene and enter the main loop
-    start() : void 
-    {
-        this.initialize();
-        this.createScene();
-        this.mainLoop();
-    }
-
-    private initialize() : void
-    {
         // Initialize graphics
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -62,6 +51,13 @@ export abstract class GraphicsApp
 
         // Initialize the fps clock
         this.clock = new THREE.Clock()
+    }
+
+    // Create the scene and enter the main loop
+    start() : void 
+    {
+        this.createScene();
+        this.mainLoop();
     }
 
     // This starts the main loop of the game

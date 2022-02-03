@@ -5,18 +5,20 @@ import { Ball } from './Ball';
 
 export class CarSoccer extends GraphicsApp
 {
-    // Exclamation points tell TypeScript that the variables won't be
-    // null even though they aren't initialized in the constructor
-    private car! : Car;
-    private ball! : Ball;
-    
     private inputVector : THREE.Vector2;
+    private car : Car;
+    private ball : Ball; 
 
     constructor()
     {
-        super();
-        this.aspectRatio = 2;
+        // Pass in the aspect ratio as a parameter
+        super(2);
+        
+        // Initialize all member variables here
+        // This will help prevent runtime errors
         this.inputVector = new THREE.Vector2();
+        this.car = new Car(new THREE.Vector3(0, 1, 45), new THREE.Vector3(4, 4, 5), 4);
+        this.ball = new Ball(new THREE.Vector3(0, 2.6, 0), 2.6);
     }
 
     createScene() : void
@@ -56,12 +58,8 @@ export class CarSoccer extends GraphicsApp
         pitch.position.set(0, -0.5, 0);
         this.scene.add(pitch);
 
-        // Create the car
-        this.car = new Car(new THREE.Vector3(0, 1, 45), new THREE.Vector3(4, 4, 5), 4);
+        // Add the car and ball to the scene
         this.scene.add(this.car);
-
-        // Create the ball
-        this.ball = new Ball(new THREE.Vector3(0, 2.6, 0), 2.6);
         this.scene.add(this.ball);
     }
 
