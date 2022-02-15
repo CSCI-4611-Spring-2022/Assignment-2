@@ -14,11 +14,11 @@ This purpose of this assignment is to create a simple, fun 3D soccer game loosel
 
 You should fill out this information before submitting your assignment. Make sure to document the name and source of any third party assets that you added, such as models, images, sounds, or any other content used that was not solely written by you. 
 
-Name:
+Name: Ethan Saunders
 
-Third Party Assets:
+Third Party Assets: None
 
-Wizard Bonus Functionality:
+Wizard Bonus Functionality: None
 
 ## Prerequisites
 
